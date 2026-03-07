@@ -18,6 +18,12 @@ const Login: React.FC = () => {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+        
+        if (!email.trim() || !password.trim()) {
+            setError("All fields are required");
+            return;
+        }
+
         setLoading(true);
         setError('');
 
@@ -25,8 +31,8 @@ const Login: React.FC = () => {
             const response: any = await authService.login({ email, password });
             login(response.token);
             navigate(from, { replace: true });
-        } catch (err) {
-            setError('Invalid credentials');
+        } catch (err: any) {
+            setError(err.response?.data?.message || 'Invalid credentials');
         } finally {
             setLoading(false);
         }

@@ -22,6 +22,12 @@ const Register: React.FC = () => {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+
+        if (!formData.email.trim() || !formData.firstName.trim() || !formData.lastName.trim() || !formData.password.trim() || !formData.confirmPassword.trim()) {
+            setError("All fields are required");
+            return;
+        }
+
         if (formData.password !== formData.confirmPassword) {
             setError("Passwords don't match");
             return;
@@ -31,9 +37,11 @@ const Register: React.FC = () => {
         setError('');
 
         try {
-            await authService.register(formData);
-            navigate('/login');
+            const { confirmPassword, ...registerData } = formData;
+            await authService.register(registerData);
+            navigate('/dashboard');
         } catch (err: any) {
+            console.error("Registration error:", err);
             setError(err.response?.data?.message || 'Registration failed');
         } finally {
             setLoading(false);
