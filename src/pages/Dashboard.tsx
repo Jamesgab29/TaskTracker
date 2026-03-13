@@ -3,7 +3,7 @@ import { TaskCard } from '../components/TaskCard';
 import type { Task } from '../components/TaskCard';
 import { TaskModal } from '../components/TaskModal';
 import { useTasks } from '../context/TaskContext';
-import type { Category } from '../context/TaskContext';
+
 import { Plus, Filter } from 'lucide-react';
 
 const Dashboard: React.FC = () => {
