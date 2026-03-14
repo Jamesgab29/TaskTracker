@@ -2,11 +2,18 @@ import React from 'react';
 import { useAuth } from '../hooks/useAuth';
 import { useTasks } from '../context/TaskContext';
 import { LayoutDashboard, CheckSquare, List, Settings, LogOut, Search, Bell, Calendar } from 'lucide-react';
-import { Outlet } from 'react-router-dom';
+import { Outlet, NavLink } from 'react-router-dom';
 
 export const Layout: React.FC = () => {
     const { logout } = useAuth();
     const { searchQuery, setSearchQuery } = useTasks();
+
+    const navLinkClass = ({ isActive }: { isActive: boolean }) =>
+        `flex items-center gap-4 px-4 py-3 rounded-xl font-medium transition-colors ${
+            isActive
+                ? 'bg-white/20 text-white'
+                : 'hover:bg-white/5 text-white/90'
+        }`;
 
     return (
         <div className="min-h-screen flex bg-light font-sans text-dark">
@@ -19,18 +26,18 @@ export const Layout: React.FC = () => {
                         </h1>
                     </div>
                     <nav className="mt-8 space-y-2 px-4">
-                        <a href="#" className="flex items-center gap-4 px-4 py-3 bg-white/10 rounded-xl font-medium">
+                        <NavLink to="/dashboard" className={navLinkClass}>
                             <LayoutDashboard size={20} /> Dashboard
-                        </a>
+                        </NavLink>
                         <a href="#" className="flex items-center gap-4 px-4 py-3 hover:bg-white/5 rounded-xl transition-colors text-white/90">
                             <CheckSquare size={20} /> My Task
                         </a>
                         <a href="#" className="flex items-center gap-4 px-4 py-3 hover:bg-white/5 rounded-xl transition-colors text-white/90">
                             <List size={20} /> Task Categories
                         </a>
-                        <a href="#" className="flex items-center gap-4 px-4 py-3 hover:bg-white/5 rounded-xl transition-colors text-white/90">
+                        <NavLink to="/settings" className={navLinkClass}>
                             <Settings size={20} /> Settings
-                        </a>
+                        </NavLink>
                     </nav>
                 </div>
 
@@ -87,3 +94,4 @@ export const Layout: React.FC = () => {
         </div>
     );
 };
+

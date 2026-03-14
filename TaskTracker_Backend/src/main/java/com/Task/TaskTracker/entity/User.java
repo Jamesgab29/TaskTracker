@@ -3,9 +3,11 @@ package com.Task.TaskTracker.entity;
 import jakarta.persistence.*;
 import java.util.UUID;
 
+// User Entity - for authentication (login/register)
+// Stored in "users" table in Supabase
 @Entity
-@Table(name = "user_profiles")
-public class UserProfile {
+@Table(name = "users")
+public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -17,12 +19,7 @@ public class UserProfile {
     @Column(nullable = false)
     private String password;
 
-    private String fullName;
-
-    @Column(name = "profile_picture", columnDefinition = "bytea")
-    private byte[] profilePicture;
-
-    // --- GETTERS AND SETTERS (Required to fix your errors) ---
+    // --- GETTERS AND SETTERS ---
 
     public UUID getId() { return id; }
     public void setId(UUID id) { this.id = id; }
@@ -32,10 +29,4 @@ public class UserProfile {
 
     public String getPassword() { return password; }
     public void setPassword(String password) { this.password = password; }
-
-    public String getFullName() { return fullName; }
-    public void setFullName(String fullName) { this.fullName = fullName; }
-
-    public byte[] getProfilePicture() { return profilePicture; }
-    public void setProfilePicture(byte[] profilePicture) { this.profilePicture = profilePicture; }
 }

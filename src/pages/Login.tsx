@@ -29,7 +29,10 @@ const Login: React.FC = () => {
 
         try {
             const response: any = await authService.login({ email, password });
-            login(response.token);
+            // Parse userId from message like "Login Successful. ID: <uuid>"
+            const idMatch = response.message?.match(/ID:\s*(.+)/);
+            const userId = idMatch ? idMatch[1].trim() : '';
+            login(response.token, userId);
             navigate(from, { replace: true });
         } catch (err: any) {
             setError(err.response?.data?.message || 'Invalid credentials');
