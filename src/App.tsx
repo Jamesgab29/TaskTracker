@@ -1,13 +1,13 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import { AuthProvider } from './context/AuthContext';
-import { TaskProvider } from './context/TaskContext';
-import { ProtectedRoute } from './components/ProtectedRoute';
-import { Layout } from './components/Layout';
-import Login from './pages/Login';
-import Register from './pages/Register';
-import Dashboard from './pages/Dashboard';
-import Settings from './pages/Settings';
+
+// Feature imports - Vertical Slicing Architecture
+import { AuthProvider, ProtectedRoute, Login, Register } from './features/auth';
+import { TaskProvider, Dashboard } from './features/tasks';
+import { Settings } from './features/settings';
+
+// Shared imports
+import { Layout } from './shared';
 
 const App: React.FC = () => {
   return (
@@ -34,4 +34,3 @@ const App: React.FC = () => {
 };
 
 export default App;
-
