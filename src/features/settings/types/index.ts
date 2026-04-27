@@ -7,4 +7,5 @@ export interface UserProfile {
     lastName: string;
     contactNumber: string;
     profilePicture: string | null;
+    hasProfilePicture?: boolean;
 }

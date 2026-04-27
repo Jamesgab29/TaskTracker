@@ -7,7 +7,7 @@ import { useTasks } from '../context/TaskContext';
 import { Plus, Filter } from 'lucide-react';
 
 const Dashboard: React.FC = () => {
-    const { tasks, addTask, updateTask, searchQuery, categoryFilter, setCategoryFilter } = useTasks();
+    const { tasks, categories, addTask, updateTask, searchQuery, categoryFilter, setCategoryFilter } = useTasks();
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [taskToEdit, setTaskToEdit] = useState<Task | null>(null);
 
@@ -28,7 +28,7 @@ const Dashboard: React.FC = () => {
     const filteredTasks = tasks.filter(task => {
         const matchesSearch = task.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
             task.description.toLowerCase().includes(searchQuery.toLowerCase());
-        const matchesCategory = categoryFilter === 'All' || task.category === categoryFilter;
+        const matchesCategory = categoryFilter === 'All' || task.category?.id === categoryFilter || task.category?.name === categoryFilter;
         return matchesSearch && matchesCategory;
     });
 
@@ -63,9 +63,9 @@ const Dashboard: React.FC = () => {
                                 onChange={(e) => setCategoryFilter(e.target.value as any)}
                             >
                                 <option value="All">All Categories</option>
-                                <option value="Work">Work</option>
-                                <option value="Personal">Personal</option>
-                                <option value="Other">Other</option>
+                                {categories.map(cat => (
+                                    <option key={cat.id} value={cat.id}>{cat.name}</option>
+                                ))}
                             </select>
                         </div>
                     </div>

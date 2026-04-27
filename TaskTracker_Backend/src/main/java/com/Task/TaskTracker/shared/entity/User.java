@@ -2,6 +2,8 @@ package com.Task.TaskTracker.shared.entity;
 
 import jakarta.persistence.*;
 import java.util.UUID;
+import java.util.List;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 // User Entity - for authentication (login/register)
 // Stored in "users" table in Supabase
@@ -19,6 +21,10 @@ public class User {
     @Column(nullable = false)
     private String password;
 
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
+    private List<Task> tasks;
+
     // --- GETTERS AND SETTERS ---
 
     public UUID getId() { return id; }
@@ -29,4 +35,7 @@ public class User {
 
     public String getPassword() { return password; }
     public void setPassword(String password) { this.password = password; }
+
+    public List<Task> getTasks() { return tasks; }
+    public void setTasks(List<Task> tasks) { this.tasks = tasks; }
 }

@@ -3,7 +3,7 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 
 // Feature imports - Vertical Slicing Architecture
 import { AuthProvider, ProtectedRoute, Login, Register } from './features/auth';
-import { TaskProvider, Dashboard } from './features/tasks';
+import { TaskProvider, Dashboard, MyTasks, TaskCategories } from './features/tasks';
 import { Settings } from './features/settings';
 
 // Shared imports
@@ -21,6 +21,8 @@ const App: React.FC = () => {
             <Route element={<ProtectedRoute />}>
               <Route element={<Layout />}>
                 <Route path="/dashboard" element={<Dashboard />} />
+                <Route path="/my-tasks" element={<MyTasks />} />
+                <Route path="/task-categories" element={<TaskCategories />} />
                 <Route path="/settings" element={<Settings />} />
               </Route>
             </Route>

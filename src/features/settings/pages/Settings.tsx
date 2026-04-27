@@ -44,8 +44,8 @@ const Settings: React.FC = () => {
             setLastName(data.lastName || '');
             setEmail(data.email || '');
             setContactNumber(data.contactNumber || '');
-            if (data.profilePicture) {
-                setPhotoPreview(`/api/profile/${userId}/photo`);
+            if (data.hasProfilePicture) {
+                setPhotoPreview(`/api/profile/${userId}/photo?t=${Date.now()}`);
             }
         } catch {
             setMessage({ type: 'error', text: 'Failed to load profile' });

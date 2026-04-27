@@ -1,7 +1,7 @@
 import React from 'react';
 import { Settings, Trash2 } from 'lucide-react';
 import { useTasks } from '../context/TaskContext';
-import type { Task, Category } from '../types';
+import type { Task } from '../types';
 
 interface TaskCardProps {
     task: Task;
@@ -33,7 +33,7 @@ export const TaskCard: React.FC<TaskCardProps> = ({ task, onClickMenu }) => {
                         <Settings size={18} className="rotate-90" />
                     </button>
                     <button
-                        onClick={(e) => { e.stopPropagation(); deleteTask(task.id); }}
+                        onClick={(e) => { e.stopPropagation(); if(task.id) deleteTask(task.id); }}
                         className="text-gray-400 hover:text-red-500 p-1"
                         title="Delete task"
                     >
@@ -53,7 +53,7 @@ export const TaskCard: React.FC<TaskCardProps> = ({ task, onClickMenu }) => {
                 </div>
                 <div className="flex gap-2">
                     <span className="text-gray-500">Category:</span>
-                    <span className="text-purple-500">{task.category}</span>
+                    <span className="text-purple-500">{task.category?.name || 'Uncategorized'}</span>
                 </div>
                 <div className="flex gap-2">
                     <span className="text-gray-500">Status:</span>
@@ -61,10 +61,16 @@ export const TaskCard: React.FC<TaskCardProps> = ({ task, onClickMenu }) => {
                         {task.status}
                     </span>
                 </div>
-                <div className="text-gray-400 ml-auto">
+                <div className="text-gray-400 ml-auto flex gap-4">
+                    {task.subtasks && task.subtasks.length > 0 && (
+                        <span className="text-gray-500 font-semibold">{task.subtasks.filter(s => s.completed).length}/{task.subtasks.length} Subtasks</span>
+                    )}
+                    {task.dueDate && task.status !== 'Completed' && (
+                        <span className="text-red-400 font-semibold">Due: {new Date(task.dueDate).toLocaleDateString()}</span>
+                    )}
                     {task.status === 'Completed' && task.completedOn
                         ? `Completed ${task.completedOn}`
-                        : `Created on: ${task.createdOn}`}
+                        : `Created on: ${task.createdOn ? new Date(task.createdOn).toLocaleDateString() : 'N/A'}`}
                 </div>
             </div>
         </div>

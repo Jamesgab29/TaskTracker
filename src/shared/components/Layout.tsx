@@ -29,12 +29,12 @@ export const Layout: React.FC = () => {
                         <NavLink to="/dashboard" className={navLinkClass}>
                             <LayoutDashboard size={20} /> Dashboard
                         </NavLink>
-                        <a href="#" className="flex items-center gap-4 px-4 py-3 hover:bg-white/5 rounded-xl transition-colors text-white/90">
+                        <NavLink to="/my-tasks" className={navLinkClass}>
                             <CheckSquare size={20} /> My Task
-                        </a>
-                        <a href="#" className="flex items-center gap-4 px-4 py-3 hover:bg-white/5 rounded-xl transition-colors text-white/90">
+                        </NavLink>
+                        <NavLink to="/task-categories" className={navLinkClass}>
                             <List size={20} /> Task Categories
-                        </a>
+                        </NavLink>
                         <NavLink to="/settings" className={navLinkClass}>
                             <Settings size={20} /> Settings
                         </NavLink>

@@ -1,67 +1,111 @@
-import React, { createContext, useState, type ReactNode, useContext } from 'react';
+import React, { createContext, useState, useEffect, type ReactNode, useContext } from 'react';
 import type { Task, Category } from '../types';
+import { taskService } from '../services/taskService';
+import { useAuth } from '../../auth/hooks/useAuth';
 
 interface TaskContextType {
     tasks: Task[];
+    categories: Category[];
     searchQuery: string;
     setSearchQuery: (q: string) => void;
-    categoryFilter: Category | 'All';
-    setCategoryFilter: (c: Category | 'All') => void;
-    addTask: (task: Omit<Task, 'id' | 'createdOn'>) => void;
-    updateTask: (task: Task) => void;
-    deleteTask: (id: string) => void;
+    categoryFilter: string | 'All';
+    setCategoryFilter: (c: string | 'All') => void;
+    addTask: (task: Omit<Task, 'id' | 'createdOn'>) => Promise<void>;
+    updateTask: (task: Task) => Promise<void>;
+    deleteTask: (id: string) => Promise<void>;
+    refreshTasks: () => Promise<void>;
+    addCategory: (name: string) => Promise<void>;
 }
-
-const mockInitialTasks: Task[] = [
-    {
-        id: '1',
-        title: "Attend Nischal's Birthday Party",
-        description: "Buy gifts on the way and pick up cake from the bakery. (6 PM | Fresh Elements).....",
-        priority: "Moderate",
-        status: "Not Started",
-        category: 'Personal',
-        createdOn: "20/06/2023"
-    },
-    {
-        id: '2',
-        title: "Landing Page Design for TravelDays",
-        description: "Get the work done by EOD and discuss with client before leaving. (4 PM | Meeting Room)",
-        priority: "Moderate",
-        status: "In Progress",
-        category: 'Work',
-        createdOn: "20/06/2023"
-    }
-];
 
 export const TaskContext = createContext<TaskContextType | undefined>(undefined);
 
 export const TaskProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-    const [tasks, setTasks] = useState<Task[]>(mockInitialTasks);
+    const { userId } = useAuth();
+    const [tasks, setTasks] = useState<Task[]>([]);
+    const [categories, setCategories] = useState<Category[]>([]);
     const [searchQuery, setSearchQuery] = useState('');
-    const [categoryFilter, setCategoryFilter] = useState<Category | 'All'>('All');
+    const [categoryFilter, setCategoryFilter] = useState<string | 'All'>('All');
 
-    const addTask = (newTaskData: Omit<Task, 'id' | 'createdOn'>) => {
-        const newTask: Task = {
-            ...newTaskData,
-            id: Math.random().toString(36).substr(2, 9),
-            createdOn: new Date().toLocaleDateString('en-GB')
-        };
-        setTasks([newTask, ...tasks]);
+    const fetchCategories = async () => {
+        try {
+            const data = await taskService.getCategories();
+            if (data && data.categories) {
+                setCategories(data.categories);
+            }
+        } catch (error) {
+            console.error('Failed to fetch categories:', error);
+        }
     };
 
-    const updateTask = (updatedTask: Task) => {
-        setTasks(tasks.map(t => t.id === updatedTask.id ? updatedTask : t));
+    const fetchTasks = async () => {
+        if (!userId) return;
+        try {
+            const data = await taskService.getTasks(userId);
+            if (data && data.tasks) {
+                setTasks(data.tasks);
+            }
+        } catch (error) {
+            console.error('Failed to fetch tasks:', error);
+        }
     };
 
-    const deleteTask = (id: string) => {
-        setTasks(tasks.filter(t => t.id !== id));
+    const addCategory = async (name: string) => {
+        try {
+            await taskService.createCategory(name);
+            await fetchCategories();
+        } catch (error) {
+            console.error('Failed to add category:', error);
+        }
+    };
+
+    useEffect(() => {
+        fetchCategories();
+    }, []);
+
+    useEffect(() => {
+        if (userId) {
+            fetchTasks();
+        } else {
+            setTasks([]);
+        }
+    }, [userId]);
+
+    const addTask = async (newTaskData: Omit<Task, 'id' | 'createdOn'>) => {
+        if (!userId) return;
+        try {
+            await taskService.createTask({ ...newTaskData, userId });
+            await fetchTasks();
+        } catch (error) {
+            console.error('Failed to add task:', error);
+        }
+    };
+
+    const updateTask = async (updatedTask: Task) => {
+        if (!updatedTask.id) return;
+        try {
+            await taskService.updateTask(updatedTask.id, updatedTask);
+            await fetchTasks();
+        } catch (error) {
+            console.error('Failed to update task:', error);
+        }
+    };
+
+    const deleteTask = async (id: string) => {
+        try {
+            await taskService.deleteTask(id);
+            await fetchTasks();
+        } catch (error) {
+            console.error('Failed to delete task:', error);
+        }
     };
 
     return (
         <TaskContext.Provider value={{
-            tasks, addTask, updateTask, deleteTask,
+            tasks, categories, addTask, updateTask, deleteTask,
             searchQuery, setSearchQuery,
-            categoryFilter, setCategoryFilter
+            categoryFilter, setCategoryFilter,
+            refreshTasks: fetchTasks,
+            addCategory
         }}>
             {children}
         </TaskContext.Provider>
