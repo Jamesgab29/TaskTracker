@@ -36,6 +36,8 @@ public class RegisterService {
         // Create empty profile in "profile_information" table
         ProfileInformation profile = new ProfileInformation();
         profile.setUser(savedUser);
+        profile.setFirstName(request.getFirstName());
+        profile.setLastName(request.getLastName());
         profileRepository.save(profile);
 
         return new RegisterResponse(
