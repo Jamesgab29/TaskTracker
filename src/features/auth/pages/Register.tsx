@@ -39,7 +39,7 @@ const Register: React.FC = () => {
         try {
             const { confirmPassword, ...registerData } = formData;
             await authService.register(registerData);
-            navigate('/dashboard');
+            navigate('/login', { state: { success: 'Registration successful! Please log in.' } });
         } catch (err: any) {
             console.error("Registration error:", err);
             setError(err.response?.data?.message || 'Registration failed');

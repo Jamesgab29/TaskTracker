@@ -51,6 +51,11 @@ const Login: React.FC = () => {
                             <h2 className="text-3xl font-bold text-dark tracking-tight">Sign In</h2>
                         </div>
 
+                        {location.state?.success && (
+                            <div className="text-emerald-600 text-sm text-left bg-emerald-50 p-3 rounded-lg">
+                                {location.state.success}
+                            </div>
+                        )}
                         {error && <div className="text-red-500 text-sm text-left bg-red-50 p-3 rounded-lg">{error}</div>}
 
                         <form className="space-y-4" onSubmit={handleSubmit}>

@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 // 2. Register Service
 @Service
 public class RegisterService {
@@ -39,6 +41,8 @@ public class RegisterService {
         profile.setFirstName(request.getFirstName());
         profile.setLastName(request.getLastName());
         profileRepository.save(profile);
+
+
 
         return new RegisterResponse(
             "User registered successfully",
