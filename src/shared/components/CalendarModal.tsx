@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X, ChevronLeft, ChevronRight, Plus, Trash2, Edit3, Calendar } from 'lucide-react';
+import { X, ChevronLeft, ChevronRight, Trash2, Edit3, Calendar } from 'lucide-react';
 import type { Task } from '../../features/tasks/types';
 import { useTasks } from '../../features/tasks/context/TaskContext';
 
@@ -7,14 +7,12 @@ interface CalendarModalProps {
     isOpen: boolean;
     onClose: () => void;
     onEditTask: (task: Task) => void;
-    onAddTaskForDate: (date: Date) => void;
 }
 
 export const CalendarModal: React.FC<CalendarModalProps> = ({
     isOpen,
     onClose,
     onEditTask,
-    onAddTaskForDate,
 }) => {
     const { tasks, deleteTask } = useTasks();
     const [currentDate, setCurrentDate] = useState(new Date());

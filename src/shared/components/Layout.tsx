@@ -23,15 +23,6 @@ export const Layout: React.FC = () => {
         }
     };
 
-    const handleAddTaskForDate = (date: Date) => {
-        setTaskToEdit(null);
-        const offset = date.getTimezoneOffset();
-        const localDate = new Date(date.getTime() - (offset * 60 * 1000));
-        const dateStr = localDate.toISOString().split('T')[0];
-        setDefaultDate(dateStr);
-        setIsTaskModalOpen(true);
-    };
-
     const handleEditTask = (task: Task) => {
         setTaskToEdit(task);
         setDefaultDate('');
@@ -129,7 +120,6 @@ export const Layout: React.FC = () => {
                 isOpen={isCalendarOpen}
                 onClose={() => setIsCalendarOpen(false)}
                 onEditTask={handleEditTask}
-                onAddTaskForDate={handleAddTaskForDate}
             />
 
             <TaskModal
