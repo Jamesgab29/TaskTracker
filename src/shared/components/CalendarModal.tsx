@@ -239,21 +239,13 @@ export const CalendarModal: React.FC<CalendarModalProps> = ({
                         </button>
                     </div>
 
-                    {/* Add task button for this specific day */}
-                    <button
-                        onClick={() => onAddTaskForDate(selectedDate)}
-                        className="w-full mb-4 py-2.5 px-4 bg-primary hover:bg-teal-600 text-white rounded-2xl font-semibold text-xs tracking-wide transition-all shadow-md shadow-primary/10 flex items-center justify-center gap-1.5 shrink-0 cursor-pointer"
-                    >
-                        <Plus size={14} /> Add Task for Today
-                    </button>
-
                     {/* Task list container */}
                     <div className="flex-1 overflow-y-auto space-y-3 pb-4 pr-1">
                         {selectedTasks.length === 0 ? (
                             <div className="flex flex-col items-center justify-center h-full text-center p-4">
                                 <span className="text-3xl mb-2 opacity-60">🏖️</span>
                                 <p className="text-sm font-semibold text-gray-500">No tasks due today</p>
-                                <p className="text-xs text-gray-400 mt-1">Enjoy your day or schedule a new task above!</p>
+                                <p className="text-xs text-gray-400 mt-1">Enjoy your day!</p>
                             </div>
                         ) : (
                             selectedTasks.map(task => {
