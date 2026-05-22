@@ -8,9 +8,10 @@ interface TaskModalProps {
     onClose: () => void;
     onSave: (task: any) => void;
     taskToEdit?: Task | null;
+    defaultDate?: string;
 }
 
-export const TaskModal: React.FC<TaskModalProps> = ({ isOpen, onClose, onSave, taskToEdit }) => {
+export const TaskModal: React.FC<TaskModalProps> = ({ isOpen, onClose, onSave, taskToEdit, defaultDate }) => {
     const { categories } = useTasks();
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
@@ -42,11 +43,11 @@ export const TaskModal: React.FC<TaskModalProps> = ({ isOpen, onClose, onSave, t
             setPriority('Moderate');
             setStatus('Not Started');
             setCategoryId(categories.length > 0 ? categories[0].id : '');
-            setDueDate('');
+            setDueDate(defaultDate || '');
             setSubtasks([]);
         }
         setNewSubtaskName('');
-    }, [taskToEdit, isOpen, categories]);
+    }, [taskToEdit, isOpen, categories, defaultDate]);
 
     if (!isOpen) return null;
 

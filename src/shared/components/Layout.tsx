@@ -1,12 +1,42 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useAuth } from '../../features/auth/hooks/useAuth';
 import { useTasks } from '../../features/tasks/context/TaskContext';
 import { LayoutDashboard, CheckSquare, List, Settings, LogOut, Search, Bell, Calendar } from 'lucide-react';
 import { Outlet, NavLink } from 'react-router-dom';
+import { CalendarModal } from './CalendarModal';
+import { TaskModal } from '../../features/tasks/components/TaskModal';
+import type { Task } from '../../features/tasks/types';
 
 export const Layout: React.FC = () => {
     const { logout } = useAuth();
-    const { searchQuery, setSearchQuery } = useTasks();
+    const { searchQuery, setSearchQuery, addTask, updateTask } = useTasks();
+    const [isCalendarOpen, setIsCalendarOpen] = useState(false);
+    const [isTaskModalOpen, setIsTaskModalOpen] = useState(false);
+    const [taskToEdit, setTaskToEdit] = useState<Task | null>(null);
+    const [defaultDate, setDefaultDate] = useState<string>('');
+
+    const handleSaveTask = (taskData: any) => {
+        if (taskToEdit) {
+            updateTask(taskData as Task);
+        } else {
+            addTask(taskData);
+        }
+    };
+
+    const handleAddTaskForDate = (date: Date) => {
+        setTaskToEdit(null);
+        const offset = date.getTimezoneOffset();
+        const localDate = new Date(date.getTime() - (offset * 60 * 1000));
+        const dateStr = localDate.toISOString().split('T')[0];
+        setDefaultDate(dateStr);
+        setIsTaskModalOpen(true);
+    };
+
+    const handleEditTask = (task: Task) => {
+        setTaskToEdit(task);
+        setDefaultDate('');
+        setIsTaskModalOpen(true);
+    };
 
     const navLinkClass = ({ isActive }: { isActive: boolean }) =>
         `flex items-center gap-4 px-4 py-3 rounded-xl font-medium transition-colors ${
@@ -72,7 +102,10 @@ export const Layout: React.FC = () => {
                         <button className="bg-secondary/10 text-secondary p-2.5 rounded-xl hover:bg-secondary/20 transition-colors">
                             <Bell size={20} />
                         </button>
-                        <button className="bg-secondary/10 text-secondary p-2.5 rounded-xl hover:bg-secondary/20 transition-colors">
+                        <button 
+                            onClick={() => setIsCalendarOpen(true)}
+                            className="bg-secondary/10 text-secondary p-2.5 rounded-xl hover:bg-secondary/20 transition-colors cursor-pointer"
+                        >
                             <Calendar size={20} />
                         </button>
                         <div className="text-right ml-4 border-l border-gray-200 pl-6">
@@ -91,6 +124,21 @@ export const Layout: React.FC = () => {
                     <Outlet />
                 </main>
             </div>
+
+            <CalendarModal
+                isOpen={isCalendarOpen}
+                onClose={() => setIsCalendarOpen(false)}
+                onEditTask={handleEditTask}
+                onAddTaskForDate={handleAddTaskForDate}
+            />
+
+            <TaskModal
+                isOpen={isTaskModalOpen}
+                onClose={() => setIsTaskModalOpen(false)}
+                onSave={handleSaveTask}
+                taskToEdit={taskToEdit}
+                defaultDate={defaultDate}
+            />
         </div>
     );
 };
